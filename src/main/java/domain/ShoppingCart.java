@@ -15,10 +15,27 @@ import java.util.List;
 @AllArgsConstructor
 public class ShoppingCart {
     @Id
-    String shoppingCartNumber;
-    List<CartLine> cartLines = new ArrayList<>();
-    public void addToCart(Product product, int qty) {}
-    public void removeFromCart(Product product) {}
-    public void changeQuantity(Product product, int qty) {}
+    private String shoppingcartNumber; // UML name matches ID
+
+    private String customerNumber; // because Customer → ShoppingCart (1 to many)
+
+    private List<CartLine> cartLines = new ArrayList<>();
+
+
+    public void addToCart(Product product, int quantity) {
+        cartLines.add(new CartLine(quantity, product));
+    }
+
+    public void removeFromCart(String productNumber) {
+        cartLines.removeIf(cl -> cl.getProduct().getProductNumber().equals(productNumber));
+    }
+
+    public void changeQuantity(String productNumber, int newQty) {
+        cartLines.stream()
+                .filter(cl -> cl.getProduct().getProductNumber().equals(productNumber))
+                .findFirst()
+                .ifPresent(cl -> cl.setQuantity(newQty));
+    }
+
     public void checkout() {}
 }
