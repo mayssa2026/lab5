@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import service.ProductService;
 
 @RestController
+@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
     @Autowired
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(Product product) {
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.addProduct(product));
     }
     @GetMapping("/{id}")
@@ -25,7 +26,7 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
     @PutMapping("/{id}")
-    public Product updateProduct(String id, Product updatedData) {
+    public Product updateProduct(@PathVariable String id, @RequestBody Product updatedData) {
         Product existing = productService.getProduct(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
